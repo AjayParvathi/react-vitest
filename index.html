@@ -1,1 +1,1384 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitest — The Complete Testing Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f2eb;
+  --paper: #faf8f3;
+  --ink: #1a1714;
+  --ink2: #3d3830;
+  --ink3: #7a7265;
+  --ink4: #b0a898;
+  --rule: #ddd8cf;
+  --accent-g: #2d6a4f;
+  --accent-g-bg: #e8f5ee;
+  --accent-b: #1d4e89;
+  --accent-b-bg: #e8f0f9;
+  --accent-r: #9b2226;
+  --accent-r-bg: #fdecea;
+  --accent-o: #7d4e00;
+  --accent-o-bg: #fdf3e0;
+  --accent-p: #4a1777;
+  --accent-p-bg: #f3eafa;
+  --code-bg: #1e1b16;
+  --code-text: #d4c9b0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* ── SIDEBAR + LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+nav {
+  background: var(--paper);
+  border-right: 1px solid var(--rule);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.nav-logo {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1rem;
+}
+
+.nav-logo h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.nav-logo p {
+  font-size: 11px;
+  color: var(--ink4);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  padding: 1rem 1.5rem 0.4rem;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 1.5rem;
+  font-size: 13.5px;
+  color: var(--ink3);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  border-left: 2px solid transparent;
+}
+
+nav a:hover {
+  color: var(--ink);
+  background: var(--bg);
+}
+
+nav a.active {
+  color: var(--accent-g);
+  border-left-color: var(--accent-g);
+  background: var(--accent-g-bg);
+  font-weight: 500;
+}
+
+.nav-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink4);
+  min-width: 20px;
+}
+
+/* ── MAIN ── */
+main {
+  padding: 3rem 3.5rem 6rem;
+  max-width: 820px;
+}
+
+/* ── HERO ── */
+.hero {
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-g);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--ink3);
+  max-width: 540px;
+  line-height: 1.8;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.tag {
+  font-size: 11.5px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  color: var(--ink3);
+  background: var(--paper);
+}
+
+/* ── SECTIONS ── */
+section {
+  margin-bottom: 4.5rem;
+  scroll-margin-top: 2rem;
+}
+
+h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.9rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.sec-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent-g);
+  background: var(--accent-g-bg);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 2.5rem 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+p { color: var(--ink2); margin-bottom: 1rem; }
+
+/* ── CODE ── */
+.code-wrap {
+  background: var(--code-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.code-bar {
+  background: #2a261e;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-bar span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #7a7060;
+  letter-spacing: 0.05em;
+}
+
+.code-dots { display: flex; gap: 6px; }
+.code-dots i {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+.d1 { background: #ff5f57; }
+.d2 { background: #febc2e; }
+.d3 { background: #28c840; }
+
+pre {
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--code-text);
+}
+
+.kw  { color: #c792ea; }
+.fn  { color: #82aaff; }
+.str { color: #c3e88d; }
+.cmt { color: #546e7a; font-style: italic; }
+.num { color: #f78c6c; }
+.cls { color: #ffcb6b; }
+.op  { color: #89ddff; }
+.tag-h{ color: #f07178; }
+.atr { color: #c792ea; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.83em;
+  background: var(--rule);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--accent-g);
+}
+
+/* ── CALLOUTS ── */
+.box {
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  border-left: 3px solid;
+}
+.box strong { font-weight: 600; display: block; margin-bottom: 3px; }
+.box-g { background: var(--accent-g-bg); border-color: var(--accent-g); color: #1a4030; }
+.box-b { background: var(--accent-b-bg); border-color: var(--accent-b); color: #0f2d50; }
+.box-r { background: var(--accent-r-bg); border-color: var(--accent-r); color: #5c1215; }
+.box-o { background: var(--accent-o-bg); border-color: var(--accent-o); color: #4a2e00; }
+.box-p { background: var(--accent-p-bg); border-color: var(--accent-p); color: #2c0d49; }
+
+/* ── TABLES ── */
+.tbl-wrap { overflow-x: auto; margin: 1.5rem 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+th {
+  background: var(--paper);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink2);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent-b);
+  white-space: nowrap;
+}
+
+/* ── STEPS ── */
+ol.steps { list-style: none; counter-reset: s; margin: 1.5rem 0; }
+ol.steps li {
+  counter-increment: s;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+ol.steps li::before {
+  content: counter(s);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-g);
+  color: var(--accent-g);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+ol.steps li > div { flex: 1; }
+ol.steps li strong {
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+}
+ol.steps li p { margin: 0; font-size: 0.92rem; }
+
+/* ── COMPARE GRID ── */
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
+.cmp-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1.1rem;
+}
+.cmp-card h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: var(--ink);
+}
+.cmp-card ul { list-style: none; font-size: 0.85rem; color: var(--ink3); }
+.cmp-card ul li { padding: 2px 0; }
+.cmp-card ul li::before { content: "→ "; color: var(--ink4); }
+
+/* ── HR ── */
+hr { border: none; border-top: 1px solid var(--rule); margin: 3.5rem 0; }
+
+/* ── NEW BADGE ── */
+.new-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent-r);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { display: none; }
+  main { padding: 2rem 1.25rem 4rem; }
+  .cmp { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav>
+  <div class="nav-logo">
+    <h1>Vitest<br>Complete Guide</h1>
+    <p>React + Vite · For Beginners</p>
+  </div>
+
+  <div class="nav-section-label">Foundations</div>
+  <a href="#what"><span class="nav-num">01</span> What is testing?</a>
+  <a href="#why"><span class="nav-num">02</span> Why write tests?</a>
+  <a href="#setup"><span class="nav-num">03</span> Setup</a>
+  <a href="#anatomy"><span class="nav-num">04</span> Anatomy of a test</a>
+  <a href="#matchers"><span class="nav-num">05</span> Matchers (expect)</a>
+
+  <div class="nav-section-label">Core Skills</div>
+  <a href="#hooks"><span class="nav-num">06</span> Testing hooks</a>
+  <a href="#components"><span class="nav-num">07</span> Testing components</a>
+  <a href="#screen"><span class="nav-num">08</span> The screen object</a>
+  <a href="#mocks"><span class="nav-num">09</span> Mocking</a>
+  <a href="#spyon"><span class="nav-num">10</span> vi.spyOn()</a>
+  <a href="#async"><span class="nav-num">11</span> Async testing</a>
+
+  <div class="nav-section-label">Intermediate</div>
+  <a href="#providers"><span class="nav-num">12</span> Testing with providers</a>
+  <a href="#rerender"><span class="nav-num">13</span> rerender &amp; cleanup</a>
+  <a href="#skip-only"><span class="nav-num">14</span> skip &amp; only</a>
+  <a href="#snapshot"><span class="nav-num">15</span> Snapshot testing</a>
+  <a href="#coverage"><span class="nav-num">16</span> Test coverage</a>
+  <a href="#errors"><span class="nav-num">17</span> Reading error output</a>
+
+  <div class="nav-section-label">Patterns &amp; Wisdom</div>
+  <a href="#patterns"><span class="nav-num">18</span> Common patterns</a>
+  <a href="#whattoskip"><span class="nav-num">19</span> What NOT to test</a>
+  <a href="#organize"><span class="nav-num">20</span> File organization</a>
+  <a href="#tips"><span class="nav-num">21</span> Tips &amp; mistakes</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Complete Reference Guide</p>
+    <h1>How to Write Test Cases Using Vitest</h1>
+    <p class="hero-desc">Everything a React beginner needs to know — from first test to reading coverage reports — written in plain, simple English with no confusing jargon.</p>
+    <div class="tag-row">
+      <span class="tag">vitest</span>
+      <span class="tag">@testing-library/react</span>
+      <span class="tag">react + vite</span>
+      <span class="tag">beginner friendly</span>
+    </div>
+  </div>
+
+  <!-- ════════ 01 ════════ -->
+  <section id="what">
+    <h2><span class="sec-num">01</span> What is Testing?</h2>
+    <p>Imagine you build a light switch. Before giving it to someone, you flip it up and down a few times to check it actually turns the light on and off. That's testing — checking your code does what it's supposed to do.</p>
+    <p>A <strong>test</strong> is just more code that runs your real code and checks whether the result is correct. If it's wrong, the test fails and tells you exactly where.</p>
+
+    <div class="box box-b"><strong>Simple definition</strong>A test is code that checks your code. Write it once, run it any time — especially after changes — to instantly know if everything still works.</div>
+
+    <h3>Four types of tests</h3>
+    <div class="cmp">
+      <div class="cmp-card"><h4>Unit tests</h4><ul><li>Test one small piece at a time</li><li>A single function or hook</li><li>Very fast</li><li>Most common — start here</li></ul></div>
+      <div class="cmp-card"><h4>Integration tests</h4><ul><li>Test multiple pieces together</li><li>Component + its hook</li><li>Closer to real usage</li><li>Also very important</li></ul></div>
+      <div class="cmp-card"><h4>End-to-end (E2E)</h4><ul><li>Tests full app in real browser</li><li>Clicks like a real user</li><li>Slowest to run</li><li>Playwright or Cypress</li></ul></div>
+      <div class="cmp-card"><h4>Snapshot tests</h4><ul><li>Saves a "photo" of UI output</li><li>Fails if UI changes unexpectedly</li><li>Good for catching regressions</li><li>Covered in section 15</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ════════ 02 ════════ -->
+  <section id="why">
+    <h2><span class="sec-num">02</span> Why Write Tests?</h2>
+    <p>You might think "I can just run the app and click around." That's manual testing — and it breaks down fast:</p>
+    <ol class="steps">
+      <li><div><strong>It gets too slow as your app grows</strong><p>With 50 features, manually checking everything after every change takes forever.</p></div></li>
+      <li><div><strong>You forget to check things</strong><p>You fix one thing, accidentally break another, and don't notice until a user complains.</p></div></li>
+      <li><div><strong>You become afraid to change code</strong><p>Without tests, every refactor feels risky. With tests, you can boldly make changes and know in seconds if something broke.</p></div></li>
+      <li><div><strong>Onboarding new teammates is harder</strong><p>Tests act as living documentation that shows exactly how the code is supposed to behave.</p></div></li>
+    </ol>
+    <div class="box box-g"><strong>The golden benefit</strong>Tests give you <em>confidence</em>. You change something, run tests, all green — and you ship without fear.</div>
+  </section>
+
+  <!-- ════════ 03 ════════ -->
+  <section id="setup">
+    <h2><span class="sec-num">03</span> Setting Up Vitest</h2>
+
+    <h3>Step 1 — Install packages</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>terminal</span></div>
+      <pre>npm install -D vitest @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom</pre>
+    </div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Package</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>vitest</td><td>The test runner — finds and runs your test files</td></tr>
+        <tr><td>@testing-library/react</td><td>Gives you render, renderHook, screen, act</td></tr>
+        <tr><td>@testing-library/user-event</td><td>Simulates real user actions: typing, clicking</td></tr>
+        <tr><td>@testing-library/jest-dom</td><td>Adds DOM matchers: toBeInTheDocument, toHaveValue…</td></tr>
+        <tr><td>jsdom</td><td>Creates a fake browser so tests can find DOM elements</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Step 2 — vite.config.js</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>vite.config.js</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">defineConfig</span> } <span class="kw">from</span> <span class="str">'vite'</span>;
+<span class="kw">import</span> <span class="cls">react</span> <span class="kw">from</span> <span class="str">'@vitejs/plugin-react'</span>;
+
+<span class="kw">export default</span> <span class="fn">defineConfig</span>({
+  plugins: [<span class="fn">react</span>()],
+  test: {
+    environment: <span class="str">'jsdom'</span>,           <span class="cmt">// fake browser for React tests</span>
+    globals: <span class="kw">true</span>,                   <span class="cmt">// use describe/it/expect without importing</span>
+    setupFiles: <span class="str">'./src/setupTests.js'</span>, <span class="cmt">// runs before every test file</span>
+    coverage: {
+      provider: <span class="str">'v8'</span>,               <span class="cmt">// needed for coverage reports (section 16)</span>
+      reporter: [<span class="str">'text'</span>, <span class="str">'html'</span>],
+    },
+  },
+});</pre>
+    </div>
+
+    <h3>Step 3 — src/setupTests.js</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>src/setupTests.js</span></div>
+      <pre><span class="kw">import</span> <span class="str">'@testing-library/jest-dom'</span>;
+<span class="cmt">// This one line gives you all the DOM matchers like toBeInTheDocument()</span></pre>
+    </div>
+
+    <h3>Step 4 — package.json scripts</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>package.json</span></div>
+      <pre>{
+  <span class="str">"scripts"</span>: {
+    <span class="str">"test"</span>: <span class="str">"vitest"</span>,              <span class="cmt">// watch mode — re-runs on file save</span>
+    <span class="str">"test:run"</span>: <span class="str">"vitest run"</span>,     <span class="cmt">// run once and exit</span>
+    <span class="str">"test:coverage"</span>: <span class="str">"vitest run --coverage"</span>  <span class="cmt">// coverage report</span>
+  }
+}</pre>
+    </div>
+
+    <h3>Where to put test files</h3>
+    <p>Vitest finds files ending in <code>.test.js</code>, <code>.test.jsx</code>, <code>.spec.js</code>, <code>.spec.jsx</code>. Best practice — put them right next to the file they test:</p>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>folder structure</span></div>
+      <pre>src/
+  components/
+    Button.jsx
+    Button.test.jsx         <span class="cmt">← lives next to the component</span>
+  hooks/
+    useCounter.js
+    useCounter.test.js      <span class="cmt">← lives next to the hook</span></pre>
+    </div>
+  </section>
+
+  <!-- ════════ 04 ════════ -->
+  <section id="anatomy">
+    <h2><span class="sec-num">04</span> Anatomy of a Test</h2>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>full structure</span></div>
+      <pre><span class="fn">describe</span>(<span class="str">'Button component'</span>, () => {   <span class="cmt">// groups related tests</span>
+
+  <span class="fn">beforeEach</span>(() => {                  <span class="cmt">// runs before EVERY test below</span>
+    vi.<span class="fn">clearAllMocks</span>();
+  });
+
+  <span class="fn">afterEach</span>(() => {                   <span class="cmt">// runs after EVERY test below</span>
+    <span class="cmt">// cleanup if needed</span>
+  });
+
+  <span class="fn">it</span>(<span class="str">'should show the correct label'</span>, () => {
+
+    <span class="cmt">// ARRANGE — set up what you need</span>
+    <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> <span class="op">/&gt;</span>);
+
+    <span class="cmt">// ACT — do the thing you want to test</span>
+    <span class="kw">const</span> button = screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>);
+
+    <span class="cmt">// ASSERT — check the result</span>
+    <span class="fn">expect</span>(button).<span class="fn">toHaveTextContent</span>(<span class="str">'Save'</span>);
+
+  });
+
+});</pre>
+    </div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Part</th><th>What it means</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Arrange</td><td>Set up everything needed before the test</td><td>Render a component, mock an API</td></tr>
+        <tr><td>Act</td><td>Do the thing you want to test</td><td>Click a button, type in a field</td></tr>
+        <tr><td>Assert</td><td>Check if the result is what you expected</td><td>expect(x).toBe('something')</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="box box-g"><strong>Lifecycle hooks</strong><code>beforeAll</code> — runs once before all tests in the block. <code>afterAll</code> — runs once after all tests. <code>beforeEach</code> — runs before every single test. <code>afterEach</code> — runs after every single test. You can nest these inside describe blocks.</div>
+  </section>
+
+  <!-- ════════ 05 ════════ -->
+  <section id="matchers">
+    <h2><span class="sec-num">05</span> Matchers — The expect() Function</h2>
+    <p>A matcher checks a value. Pattern: <code>expect(actualValue).matcherName(expectedValue)</code></p>
+
+    <h3>General value matchers</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Matcher</th><th>Checks that…</th></tr></thead>
+      <tbody>
+        <tr><td>.toBe(val)</td><td>Exact equality — like === (use for primitives: strings, numbers, booleans)</td></tr>
+        <tr><td>.toEqual(val)</td><td>Deep equality — use for objects and arrays (compares contents)</td></tr>
+        <tr><td>.toStrictEqual(val)</td><td>Like toEqual but also checks object types (stricter)</td></tr>
+        <tr><td>.toBeTruthy()</td><td>Value is truthy (anything that isn't false, null, 0, "", undefined)</td></tr>
+        <tr><td>.toBeFalsy()</td><td>Value is falsy</td></tr>
+        <tr><td>.toBeNull()</td><td>Value is exactly null</td></tr>
+        <tr><td>.toBeUndefined()</td><td>Value is undefined</td></tr>
+        <tr><td>.toBeDefined()</td><td>Value is not undefined</td></tr>
+        <tr><td>.toBeGreaterThan(n)</td><td>Number is greater than n</td></tr>
+        <tr><td>.toBeLessThan(n)</td><td>Number is less than n</td></tr>
+        <tr><td>.toContain(item)</td><td>Array includes item, or string includes substring</td></tr>
+        <tr><td>.toHaveLength(n)</td><td>Array or string has exactly n items/characters</td></tr>
+        <tr><td>.toMatch(/regex/)</td><td>String matches a regular expression</td></tr>
+        <tr><td>.toThrow()</td><td>Function throws an error when called</td></tr>
+        <tr><td>.toThrow('message')</td><td>Function throws an error with that specific message</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Mock function matchers</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Matcher</th><th>Checks that…</th></tr></thead>
+      <tbody>
+        <tr><td>.toHaveBeenCalled()</td><td>The mock function was called at least once</td></tr>
+        <tr><td>.toHaveBeenCalledTimes(n)</td><td>The mock was called exactly n times</td></tr>
+        <tr><td>.toHaveBeenCalledWith(...args)</td><td>The mock was called with those exact arguments</td></tr>
+        <tr><td>.toHaveBeenLastCalledWith(...args)</td><td>The most recent call used those arguments</td></tr>
+        <tr><td>.toHaveReturnedWith(val)</td><td>The mock returned that value</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>DOM matchers (from jest-dom)</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Matcher</th><th>Checks that…</th></tr></thead>
+      <tbody>
+        <tr><td>.toBeInTheDocument()</td><td>Element exists in the fake DOM</td></tr>
+        <tr><td>.toHaveTextContent('...')</td><td>Element's visible text matches</td></tr>
+        <tr><td>.toHaveValue('...')</td><td>Input/select/textarea has that value</td></tr>
+        <tr><td>.toBeDisabled()</td><td>Button or input is disabled</td></tr>
+        <tr><td>.toBeEnabled()</td><td>Button or input is enabled</td></tr>
+        <tr><td>.toBeVisible()</td><td>Element is visible to the user</td></tr>
+        <tr><td>.toHaveClass('name')</td><td>Element has a specific CSS class</td></tr>
+        <tr><td>.toHaveAttribute('attr', 'val')</td><td>Element has an HTML attribute with that value</td></tr>
+        <tr><td>.toHaveFocus()</td><td>Element currently has keyboard focus</td></tr>
+        <tr><td>.toBeChecked()</td><td>Checkbox or radio is checked</td></tr>
+        <tr><td>.toBeEmptyDOMElement()</td><td>Element has no visible content</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="box box-b"><strong>The .not modifier</strong>Put <code>.not</code> before any matcher to flip it: <code>expect(x).not.toBeNull()</code>, <code>expect(fn).not.toHaveBeenCalled()</code>, <code>expect(el).not.toBeInTheDocument()</code></div>
+  </section>
+
+  <!-- ════════ 06 ════════ -->
+  <section id="hooks">
+    <h2><span class="sec-num">06</span> Testing Custom Hooks</h2>
+    <p>Custom hooks can't be called directly in tests — React requires hooks to run inside a component. <code>renderHook</code> creates a hidden mini component for you and runs the hook inside it.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>useCounter.test.js</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">renderHook</span>, <span class="fn">act</span> } <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;
+<span class="kw">import</span> { <span class="fn">useCounter</span> } <span class="kw">from</span> <span class="str">'./useCounter'</span>;
+
+<span class="fn">describe</span>(<span class="str">'useCounter'</span>, () => {
+
+  <span class="fn">it</span>(<span class="str">'should start with count = 0'</span>, () => {
+    <span class="kw">const</span> { result } = <span class="fn">renderHook</span>(() => <span class="fn">useCounter</span>());
+    <span class="cmt">// result.current = everything the hook returns</span>
+    <span class="fn">expect</span>(result.current.count).<span class="fn">toBe</span>(<span class="num">0</span>);
+  });
+
+  <span class="fn">it</span>(<span class="str">'should increment when increment() is called'</span>, () => {
+    <span class="kw">const</span> { result } = <span class="fn">renderHook</span>(() => <span class="fn">useCounter</span>());
+
+    <span class="cmt">// act() = "finish processing all state changes before I check"</span>
+    <span class="fn">act</span>(() => {
+      result.current.<span class="fn">increment</span>();
+    });
+
+    <span class="fn">expect</span>(result.current.count).<span class="fn">toBe</span>(<span class="num">1</span>);
+  });
+
+});</pre>
+    </div>
+
+    <div class="box box-o"><strong>Why act()?</strong>React batches state updates. Without <code>act()</code>, your assertions run before React has finished updating state — so you check old values. <code>act()</code> says "wait for React to finish, then continue."</div>
+  </section>
+
+  <!-- ════════ 07 ════════ -->
+  <section id="components">
+    <h2><span class="sec-num">07</span> Testing Components</h2>
+    <p>Use <code>render()</code> to mount a component into a fake DOM, then <code>screen</code> to find and interact with elements.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>Button.test.jsx</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">render</span>, <span class="fn">screen</span> } <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;
+<span class="kw">import</span> <span class="fn">userEvent</span> <span class="kw">from</span> <span class="str">'@testing-library/user-event'</span>;
+<span class="kw">import</span> { <span class="cls">Button</span> } <span class="kw">from</span> <span class="str">'./Button'</span>;
+
+<span class="fn">describe</span>(<span class="str">'Button'</span>, () => {
+
+  <span class="fn">it</span>(<span class="str">'should display the label'</span>, () => {
+    <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> <span class="op">/&gt;</span>);
+    <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Save'</span>)).<span class="fn">toBeInTheDocument</span>();
+  });
+
+  <span class="fn">it</span>(<span class="str">'should call onClick when clicked'</span>, <span class="kw">async</span> () => {
+    <span class="kw">const</span> handleClick = vi.<span class="fn">fn</span>();
+    <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> onClick={handleClick} <span class="op">/&gt;</span>);
+
+    <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>));
+
+    <span class="fn">expect</span>(handleClick).<span class="fn">toHaveBeenCalledTimes</span>(<span class="num">1</span>);
+  });
+
+  <span class="fn">it</span>(<span class="str">'should be disabled when disabled prop is true'</span>, () => {
+    <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> disabled={<span class="kw">true</span>} <span class="op">/&gt;</span>);
+    <span class="fn">expect</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>)).<span class="fn">toBeDisabled</span>();
+  });
+
+});</pre>
+    </div>
+
+    <h3>userEvent vs fireEvent</h3>
+    <p>You might see both in tutorials. Here's the difference:</p>
+    <div class="cmp">
+      <div class="cmp-card"><h4>userEvent (recommended)</h4><ul><li>Simulates real browser behavior</li><li>Fires all the right events in order (mousedown, mouseup, click...)</li><li>Use <code>await userEvent.click()</code></li><li>More realistic, catches more bugs</li></ul></div>
+      <div class="cmp-card"><h4>fireEvent (older)</h4><ul><li>Fires just one event directly</li><li>Simpler but less realistic</li><li>Use only if userEvent has issues</li><li><code>fireEvent.click(button)</code> — no await</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ════════ 08 ════════ -->
+  <section id="screen">
+    <h2><span class="sec-num">08</span> The screen Object</h2>
+    <p><code>screen</code> is your eyes into the fake DOM. After <code>render()</code>, use it to find elements the way a real user would.</p>
+
+    <h3>Three flavours of every query</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Flavour</th><th>If element missing…</th><th>Use when…</th></tr></thead>
+      <tbody>
+        <tr><td>getBy…</td><td>Throws error immediately</td><td>Element MUST be on screen right now</td></tr>
+        <tr><td>queryBy…</td><td>Returns null (no error)</td><td>Checking something is NOT there</td></tr>
+        <tr><td>findBy…</td><td>Waits, then throws if still missing</td><td>Element appears after API call or delay (async)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>The query methods (how to find elements)</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Method</th><th>Finds by…</th><th>Recommended?</th></tr></thead>
+      <tbody>
+        <tr><td>getByRole('button', {name: '…'})</td><td>HTML role + accessible name</td><td>Yes — best choice</td></tr>
+        <tr><td>getByLabelText('Name')</td><td>The text of a label element</td><td>Yes — best for form inputs</td></tr>
+        <tr><td>getByText('Submit')</td><td>Visible text on the page</td><td>Yes — simple and readable</td></tr>
+        <tr><td>getByPlaceholderText('…')</td><td>Input placeholder attribute</td><td>Sometimes</td></tr>
+        <tr><td>getByAltText('…')</td><td>Image alt attribute</td><td>For images only</td></tr>
+        <tr><td>getByDisplayValue('…')</td><td>Current value of an input or select</td><td>Occasionally</td></tr>
+        <tr><td>getByTitle('…')</td><td>title attribute</td><td>Rarely</td></tr>
+        <tr><td>getByTestId('my-id')</td><td>data-testid="…" attribute</td><td>Last resort only</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>getAllBy — when multiple elements match</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// getAllBy returns an array — use when you expect more than one match</span>
+<span class="kw">const</span> items = screen.<span class="fn">getAllByRole</span>(<span class="str">'listitem'</span>);
+<span class="fn">expect</span>(items).<span class="fn">toHaveLength</span>(<span class="num">3</span>);
+
+<span class="cmt">// Pair: getBy / queryBy / findBy = single element</span>
+<span class="cmt">// Pair: getAllBy / queryAllBy / findAllBy = multiple elements</span></pre>
+    </div>
+
+    <div class="box box-b"><strong>Why getByRole is the best choice</strong>It finds elements the same way screen readers and accessibility tools do. Good tests and good accessibility go hand in hand — if your test can find the button, so can a keyboard user.</div>
+  </section>
+
+  <!-- ════════ 09 ════════ -->
+  <section id="mocks">
+    <h2><span class="sec-num">09</span> Mocking</h2>
+    <p>A <strong>mock</strong> is a fake replacement. You mock things you don't want to really run during tests — like API servers, navigation, or toast popups.</p>
+
+    <h3>vi.fn() — mock a single function</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="kw">const</span> mockSave = vi.<span class="fn">fn</span>();  <span class="cmt">// fake function that does nothing but records calls</span>
+
+<span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Form</span> onSave={mockSave} <span class="op">/&gt;</span>);
+
+<span class="fn">expect</span>(mockSave).<span class="fn">toHaveBeenCalled</span>();
+<span class="fn">expect</span>(mockSave).<span class="fn">toHaveBeenCalledWith</span>({ name: <span class="str">'Alice'</span> });
+<span class="fn">expect</span>(mockSave).<span class="fn">toHaveBeenCalledTimes</span>(<span class="num">1</span>);</pre>
+    </div>
+
+    <h3>vi.mock() — mock an entire module</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// Replace the whole react-router module with a fake version</span>
+<span class="kw">const</span> mockNavigate = vi.<span class="fn">fn</span>();
+
+vi.<span class="fn">mock</span>(<span class="str">'react-router'</span>, () => ({
+  <span class="fn">useNavigate</span>: () => mockNavigate,
+}));
+
+<span class="cmt">// Import AFTER vi.mock() — you get the fake version</span>
+<span class="kw">import</span> { <span class="fn">useNavigate</span> } <span class="kw">from</span> <span class="str">'react-router'</span>;</pre>
+    </div>
+
+    <h3>Making mocks return values</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="kw">const</span> mockFn = vi.<span class="fn">fn</span>();
+
+mockFn.<span class="fn">mockReturnValue</span>(<span class="str">'hello'</span>);          <span class="cmt">// returns 'hello' every time</span>
+mockFn.<span class="fn">mockReturnValueOnce</span>(<span class="str">'first'</span>);       <span class="cmt">// returns 'first' only on the first call</span>
+mockFn.<span class="fn">mockResolvedValue</span>({ ok: <span class="kw">true</span> });    <span class="cmt">// returns a resolved Promise</span>
+mockFn.<span class="fn">mockRejectedValue</span>(<span class="kw">new</span> <span class="cls">Error</span>(<span class="str">'fail'</span>)); <span class="cmt">// returns a rejected Promise</span>
+mockFn.<span class="fn">mockImplementation</span>((x) => x * <span class="num">2</span>);   <span class="cmt">// custom logic</span></pre>
+    </div>
+
+    <h3>Clearing mocks between tests</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">beforeEach</span>(() => {
+  vi.<span class="fn">clearAllMocks</span>();  <span class="cmt">// resets call history + return values for ALL mocks</span>
+});
+
+<span class="cmt">// Or for a specific mock:</span>
+mockFn.<span class="fn">mockClear</span>();   <span class="cmt">// resets call history only</span>
+mockFn.<span class="fn">mockReset</span>();   <span class="cmt">// resets call history + return values</span>
+mockFn.<span class="fn">mockRestore</span>(); <span class="cmt">// restores to original (only works with spyOn)</span></pre>
+    </div>
+  </section>
+
+  <!-- ════════ 10 ════════ -->
+  <section id="spyon">
+    <h2><span class="sec-num">10</span> vi.spyOn() — Watch Without Replacing <span class="new-badge">New</span></h2>
+
+    <p>This is something beginners often miss. <code>vi.fn()</code> creates a completely fake function. <code>vi.spyOn()</code> wraps an <em>existing</em> real function so you can watch it — but it still runs the original code unless you tell it otherwise.</p>
+
+    <div class="cmp">
+      <div class="cmp-card"><h4>vi.fn()</h4><ul><li>Creates a brand new fake function</li><li>Does nothing by default</li><li>Use for callbacks passed as props</li><li>Use when you don't want real code to run</li></ul></div>
+      <div class="cmp-card"><h4>vi.spyOn()</h4><ul><li>Wraps an existing real function</li><li>Real code still runs (unless mocked)</li><li>Use to watch methods on objects/modules</li><li>Must call .mockRestore() in afterEach</li></ul></div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// Example: spy on console.error to check if errors are logged</span>
+<span class="fn">it</span>(<span class="str">'should log an error on failure'</span>, () => {
+  <span class="kw">const</span> spy = vi.<span class="fn">spyOn</span>(console, <span class="str">'error'</span>).<span class="fn">mockImplementation</span>(() => {}); <span class="cmt">// silence it</span>
+
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">BrokenComponent</span> <span class="op">/&gt;</span>);
+
+  <span class="fn">expect</span>(spy).<span class="fn">toHaveBeenCalled</span>();
+  spy.<span class="fn">mockRestore</span>(); <span class="cmt">// IMPORTANT: restore console.error after the test</span>
+});
+
+<span class="cmt">// Example: spy on a module method but keep real behavior</span>
+<span class="kw">import</span> * <span class="kw">as</span> utils <span class="kw">from</span> <span class="str">'./utils'</span>;
+
+<span class="fn">it</span>(<span class="str">'should call formatDate'</span>, () => {
+  <span class="kw">const</span> spy = vi.<span class="fn">spyOn</span>(utils, <span class="str">'formatDate'</span>); <span class="cmt">// real function still runs!</span>
+
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">DateDisplay</span> <span class="op">/&gt;</span>);
+
+  <span class="fn">expect</span>(spy).<span class="fn">toHaveBeenCalled</span>();
+});</pre>
+    </div>
+
+    <div class="box box-o"><strong>Rule of thumb</strong>Use <code>vi.fn()</code> when you don't want real code to run at all. Use <code>vi.spyOn()</code> when you want to watch a real function and still let it run, or when you need to temporarily override a method on an existing object.</div>
+  </section>
+
+  <!-- ════════ 11 ════════ -->
+  <section id="async">
+    <h2><span class="sec-num">11</span> Async Testing</h2>
+
+    <h3>async/await in tests</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'should save and show success message'</span>, <span class="kw">async</span> () => {
+  mockApi.<span class="fn">mockResolvedValue</span>({ success: <span class="kw">true</span> });
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Form</span> <span class="op">/&gt;</span>);
+
+  <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Save'</span> }));
+
+  <span class="cmt">// findBy waits for the element to appear (up to 1 second by default)</span>
+  <span class="kw">const</span> msg = <span class="kw">await</span> screen.<span class="fn">findByText</span>(<span class="str">'Saved successfully!'</span>);
+  <span class="fn">expect</span>(msg).<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+
+    <h3>waitFor — wait for any condition</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">render</span>, <span class="fn">screen</span>, <span class="fn">waitFor</span> } <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;
+
+<span class="fn">it</span>(<span class="str">'should call the API after button click'</span>, <span class="kw">async</span> () => {
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Form</span> <span class="op">/&gt;</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>));
+
+  <span class="cmt">// keeps re-running the check until it passes (or times out)</span>
+  <span class="kw">await</span> <span class="fn">waitFor</span>(() => {
+    <span class="fn">expect</span>(mockApi).<span class="fn">toHaveBeenCalledTimes</span>(<span class="num">1</span>);
+  });
+});</pre>
+    </div>
+
+    <h3>act() with async hooks</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// When a hook function is async (returns a Promise)</span>
+<span class="kw">await</span> <span class="fn">act</span>(<span class="kw">async</span> () => {
+  <span class="kw">await</span> result.current.<span class="fn">handleSubmit</span>();
+});</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 12 ════════ -->
+  <section id="providers">
+    <h2><span class="sec-num">12</span> Testing with Providers <span class="new-badge">New</span></h2>
+
+    <p>Many components need a provider wrapper to work — React Context, Redux store, React Query, React Router. Without the wrapper, the component crashes with an error like "must be used within a Provider."</p>
+
+    <h3>Option A — wrap inline in each test</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="kw">import</span> { <span class="cls">QueryClient</span>, <span class="cls">QueryClientProvider</span> } <span class="kw">from</span> <span class="str">'@tanstack/react-query'</span>;
+
+<span class="fn">it</span>(<span class="str">'should load user data'</span>, <span class="kw">async</span> () => {
+  <span class="kw">const</span> queryClient = <span class="kw">new</span> <span class="cls">QueryClient</span>();
+
+  <span class="fn">render</span>(
+    <span class="op">&lt;</span><span class="cls">QueryClientProvider</span> client={queryClient}<span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="cls">UserProfile</span> <span class="op">/&gt;</span>
+    <span class="op">&lt;/</span><span class="cls">QueryClientProvider</span><span class="op">&gt;</span>
+  );
+
+  <span class="fn">expect</span>(<span class="kw">await</span> screen.<span class="fn">findByText</span>(<span class="str">'John Doe'</span>)).<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+
+    <h3>Option B — create a custom render helper (recommended)</h3>
+    <p>Instead of wrapping in every single test, create a custom <code>renderWithProviders</code> helper once and use it everywhere:</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>src/test-utils.jsx — create this file once</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">render</span> } <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;
+<span class="kw">import</span> { <span class="cls">BrowserRouter</span> } <span class="kw">from</span> <span class="str">'react-router-dom'</span>;
+<span class="kw">import</span> { <span class="cls">QueryClient</span>, <span class="cls">QueryClientProvider</span> } <span class="kw">from</span> <span class="str">'@tanstack/react-query'</span>;
+
+<span class="kw">function</span> <span class="fn">AllProviders</span>({ children }) {
+  <span class="kw">const</span> queryClient = <span class="kw">new</span> <span class="cls">QueryClient</span>({
+    defaultOptions: { queries: { retry: <span class="kw">false</span> } }, <span class="cmt">// no retries in tests</span>
+  });
+
+  <span class="kw">return</span> (
+    <span class="op">&lt;</span><span class="cls">BrowserRouter</span><span class="op">&gt;</span>
+      <span class="op">&lt;</span><span class="cls">QueryClientProvider</span> client={queryClient}<span class="op">&gt;</span>
+        {children}
+      <span class="op">&lt;/</span><span class="cls">QueryClientProvider</span><span class="op">&gt;</span>
+    <span class="op">&lt;/</span><span class="cls">BrowserRouter</span><span class="op">&gt;</span>
+  );
+}
+
+<span class="cmt">// Custom render — wraps with all providers automatically</span>
+<span class="kw">export function</span> <span class="fn">renderWithProviders</span>(ui, options) {
+  <span class="kw">return</span> <span class="fn">render</span>(ui, { wrapper: <span class="cls">AllProviders</span>, ...options });
+}
+
+<span class="cmt">// Re-export everything from testing-library so tests only need one import</span>
+<span class="kw">export</span> * <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>UserProfile.test.jsx — using the helper</span></div>
+      <pre><span class="cmt">// Import from YOUR helper, not from @testing-library/react</span>
+<span class="kw">import</span> { <span class="fn">renderWithProviders</span>, screen } <span class="kw">from</span> <span class="str">'../test-utils'</span>;
+
+<span class="fn">it</span>(<span class="str">'should show user name'</span>, <span class="kw">async</span> () => {
+  <span class="fn">renderWithProviders</span>(<span class="op">&lt;</span><span class="cls">UserProfile</span> <span class="op">/&gt;</span>); <span class="cmt">// providers added automatically!</span>
+  <span class="fn">expect</span>(<span class="kw">await</span> screen.<span class="fn">findByText</span>(<span class="str">'John Doe'</span>)).<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+
+    <h3>Passing props to Context for testing</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// If you use React Context, you can pass a specific test value</span>
+<span class="fn">render</span>(
+  <span class="op">&lt;</span><span class="cls">UserContext.Provider</span> value={{ name: <span class="str">'Alice'</span>, role: <span class="str">'admin'</span> }}<span class="op">&gt;</span>
+    <span class="op">&lt;</span><span class="cls">Dashboard</span> <span class="op">/&gt;</span>
+  <span class="op">&lt;/</span><span class="cls">UserContext.Provider</span><span class="op">&gt;</span>
+);</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 13 ════════ -->
+  <section id="rerender">
+    <h2><span class="sec-num">13</span> rerender and cleanup <span class="new-badge">New</span></h2>
+
+    <h3>rerender — change props during a test</h3>
+    <p>Sometimes you need to test what happens when a component receives different props. Use <code>rerender</code> from the render return value:</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'should update label when prop changes'</span>, () => {
+  <span class="cmt">// render returns a rerender function</span>
+  <span class="kw">const</span> { rerender } = <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> <span class="op">/&gt;</span>);
+
+  <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Save'</span>)).<span class="fn">toBeInTheDocument</span>();
+
+  <span class="cmt">// Change props — like the parent re-rendering with new values</span>
+  <span class="fn">rerender</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Update"</span> <span class="op">/&gt;</span>);
+
+  <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Update'</span>)).<span class="fn">toBeInTheDocument</span>();
+  <span class="fn">expect</span>(screen.<span class="fn">queryByText</span>(<span class="str">'Save'</span>)).<span class="op">not</span>.<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+
+    <h3>cleanup — automatic DOM clearing</h3>
+    <p>After every test, React Testing Library automatically removes the rendered component from the fake DOM. This is called <strong>cleanup</strong> and it happens automatically — you don't need to do anything. It prevents one test's HTML from leaking into the next test.</p>
+
+    <div class="box box-g"><strong>Good to know — you don't need to call cleanup manually</strong>Testing Library calls <code>cleanup()</code> automatically after each test via an <code>afterEach</code> hook it sets up for you. You only need to call it manually if you're using a very old version or a non-standard setup.</div>
+
+    <h3>unmount — removing the component mid-test</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'should clean up subscriptions on unmount'</span>, () => {
+  <span class="kw">const</span> { unmount } = <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Timer</span> <span class="op">/&gt;</span>);
+
+  unmount(); <span class="cmt">// simulates the component being removed from the page</span>
+
+  <span class="cmt">// Check that cleanup happened (e.g. clearInterval was called)</span>
+  <span class="fn">expect</span>(mockClearInterval).<span class="fn">toHaveBeenCalled</span>();
+});</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 14 ════════ -->
+  <section id="skip-only">
+    <h2><span class="sec-num">14</span> skip and only <span class="new-badge">New</span></h2>
+    <p>Vitest gives you control over which tests run. Very useful when debugging one failing test in a large file.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// .skip — skip this test, it won't run at all</span>
+<span class="fn">it</span>.<span class="fn">skip</span>(<span class="str">'this test is temporarily disabled'</span>, () => {
+  <span class="cmt">// ...</span>
+});
+
+<span class="cmt">// .only — run ONLY this test, skip all others in the file</span>
+<span class="fn">it</span>.<span class="fn">only</span>(<span class="str">'focus on just this one test while debugging'</span>, () => {
+  <span class="cmt">// ...</span>
+});
+
+<span class="cmt">// .skip on describe — skip an entire group</span>
+<span class="fn">describe</span>.<span class="fn">skip</span>(<span class="str">'this whole group is disabled'</span>, () => {
+  <span class="cmt">// all tests inside are skipped</span>
+});
+
+<span class="cmt">// .only on describe — run only this group</span>
+<span class="fn">describe</span>.<span class="fn">only</span>(<span class="str">'debug just this group'</span>, () => {
+  <span class="cmt">// only tests inside here run</span>
+});
+
+<span class="cmt">// .todo — marks a test as something you plan to write later</span>
+<span class="fn">it</span>.<span class="fn">todo</span>(<span class="str">'should handle network timeout'</span>);
+<span class="cmt">// shows up in output as a reminder without failing</span></pre>
+    </div>
+
+    <div class="box box-r"><strong>Warning: never commit .only to your codebase</strong>If you leave <code>it.only</code> in a file and push to production, your CI/CD pipeline will only run that one test and think everything else is fine. Always remove <code>.only</code> before committing.</div>
+  </section>
+
+  <!-- ════════ 15 ════════ -->
+  <section id="snapshot">
+    <h2><span class="sec-num">15</span> Snapshot Testing <span class="new-badge">New</span></h2>
+    <p>A snapshot test takes a "photo" of your component's rendered HTML and saves it to a file. The next time you run tests, it compares the current output to the saved photo. If they're different, the test fails.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="kw">import</span> { <span class="fn">render</span> } <span class="kw">from</span> <span class="str">'@testing-library/react'</span>;
+
+<span class="fn">it</span>(<span class="str">'should match snapshot'</span>, () => {
+  <span class="kw">const</span> { container } = <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Button</span> label=<span class="str">"Save"</span> <span class="op">/&gt;</span>);
+
+  <span class="cmt">// First run: creates a snapshot file</span>
+  <span class="cmt">// Later runs: compares against saved snapshot</span>
+  <span class="fn">expect</span>(container).<span class="fn">toMatchSnapshot</span>();
+});</pre>
+    </div>
+
+    <p>When you intentionally change a component and the snapshot test fails (because the UI changed on purpose), you need to update the saved snapshot:</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>terminal</span></div>
+      <pre><span class="cmt"># Update all snapshots to match the new output</span>
+npx vitest run --update-snapshots</pre>
+    </div>
+
+    <div class="box box-o"><strong>Be careful with snapshots</strong>Snapshots are easy to write but can give false confidence. If you blindly update them every time they fail, you miss real bugs. Prefer explicit assertions (like <code>getByText</code>, <code>toHaveValue</code>) when possible — save snapshots for components that are very stable and rarely change.</div>
+  </section>
+
+  <!-- ════════ 16 ════════ -->
+  <section id="coverage">
+    <h2><span class="sec-num">16</span> Test Coverage <span class="new-badge">New</span></h2>
+    <p>Coverage tells you which lines of your real code are actually being executed by your tests. It's shown as a percentage.</p>
+
+    <h3>Running the coverage report</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>terminal</span></div>
+      <pre><span class="cmt"># First install the v8 coverage provider</span>
+npm install -D @vitest/coverage-v8
+
+<span class="cmt"># Then run</span>
+npm run test:coverage</pre>
+    </div>
+
+    <h3>Reading the output</h3>
+    <p>The terminal shows a table like this:</p>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>coverage output</span></div>
+      <pre>File              | % Stmts | % Branch | % Funcs | % Lines | Uncovered
+------------------|---------|----------|---------|---------|----------
+useCounter.js     |   100   |   100    |   100   |   100   |
+Button.jsx        |    80   |    60    |   100   |    80   | 24, 31
+Form.jsx          |    45   |    30    |    66   |    45   | 12-28, 44</pre>
+    </div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Column</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>% Stmts</td><td>Percentage of statements (lines of code) that ran during tests</td></tr>
+        <tr><td>% Branch</td><td>Percentage of if/else branches that were tested (both true and false)</td></tr>
+        <tr><td>% Funcs</td><td>Percentage of functions that were called</td></tr>
+        <tr><td>% Lines</td><td>Similar to Stmts — percentage of lines executed</td></tr>
+        <tr><td>Uncovered</td><td>The exact line numbers that no test ever reached</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="box box-b"><strong>Don't chase 100% coverage</strong>100% coverage sounds great but it can be misleading. A test can execute a line without actually checking that it does the right thing. Aim for ~70–80% coverage on important logic. Focus on testing behavior, not chasing numbers.</div>
+  </section>
+
+  <!-- ════════ 17 ════════ -->
+  <section id="errors">
+    <h2><span class="sec-num">17</span> Reading Error Output <span class="new-badge">New</span></h2>
+    <p>When a test fails, Vitest shows you exactly what went wrong. Learning to read this output quickly saves you a lot of time.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>example failure output</span></div>
+      <pre><span class="cmt">FAIL  src/components/Button.test.jsx</span>
+
+<span class="tag-h">● Button › should display the label</span>
+
+  <span class="fn">expect</span>(received).<span class="fn">toHaveTextContent</span>(expected)
+
+  Expected: <span class="str">"Save"</span>
+  Received: <span class="str">"Submit"</span>           ← what the component actually showed
+
+  at Button.test.jsx:<span class="num">12</span>:5    ← line number where expect() was written</pre>
+    </div>
+
+    <h3>Common error messages and what they mean</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Error message</th><th>What it means</th><th>How to fix it</th></tr></thead>
+      <tbody>
+        <tr><td>Unable to find role="button"</td><td>screen.getByRole() found nothing</td><td>Check if component renders, check the role/name</td></tr>
+        <tr><td>Unable to find text: "Save"</td><td>That text is not in the DOM</td><td>Check the component renders the right text</td></tr>
+        <tr><td>Not wrapped in act(...)</td><td>State updated outside act()</td><td>Wrap the state-changing call in act()</td></tr>
+        <tr><td>Cannot read properties of undefined</td><td>Something is null/undefined</td><td>Check your mock returns the right shape</td></tr>
+        <tr><td>must be used within a Provider</td><td>Component needs a context wrapper</td><td>Wrap with the required provider in your test</td></tr>
+        <tr><td>Timeout – element not found</td><td>findBy waited but element never appeared</td><td>Check async behavior — did the API mock return correctly?</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="box box-b"><strong>Tip: use screen.debug() to see the DOM</strong>If you're confused about what's actually rendered, add <code>screen.debug()</code> anywhere in your test. It prints the current HTML to the terminal so you can see exactly what's there.</div>
+
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>debugging tip</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'debugging what is rendered'</span>, () => {
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">MyComponent</span> <span class="op">/&gt;</span>);
+
+  screen.<span class="fn">debug</span>();  <span class="cmt">// prints the full HTML to the terminal</span>
+  <span class="cmt">// screen.debug(screen.getByRole('button')) — debug a specific element</span>
+});</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 18 ════════ -->
+  <section id="patterns">
+    <h2><span class="sec-num">18</span> Common Patterns</h2>
+
+    <h3>Testing a form submission</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'should submit with typed values'</span>, <span class="kw">async</span> () => {
+  <span class="kw">const</span> onSubmit = vi.<span class="fn">fn</span>();
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">LoginForm</span> onSubmit={onSubmit} <span class="op">/&gt;</span>);
+
+  <span class="kw">await</span> userEvent.<span class="fn">type</span>(screen.<span class="fn">getByLabelText</span>(<span class="str">'Email'</span>), <span class="str">'user@test.com'</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">type</span>(screen.<span class="fn">getByLabelText</span>(<span class="str">'Password'</span>), <span class="str">'secret'</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Log in'</span> }));
+
+  <span class="fn">expect</span>(onSubmit).<span class="fn">toHaveBeenCalledWith</span>({
+    email: <span class="str">'user@test.com'</span>,
+    password: <span class="str">'secret'</span>,
+  });
+});</pre>
+    </div>
+
+    <h3>Testing conditional rendering</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="cmt">// Check it SHOWS when condition is true</span>
+<span class="fn">it</span>(<span class="str">'should show error when field is empty'</span>, <span class="kw">async</span> () => {
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Form</span> <span class="op">/&gt;</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit'</span> }));
+  <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Name is required'</span>)).<span class="fn">toBeInTheDocument</span>();
+});
+
+<span class="cmt">// Check it HIDES when condition is false (use queryBy, not getBy)</span>
+<span class="fn">it</span>(<span class="str">'should NOT show error when field is filled'</span>, <span class="kw">async</span> () => {
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">Form</span> <span class="op">/&gt;</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">type</span>(screen.<span class="fn">getByLabelText</span>(<span class="str">'Name'</span>), <span class="str">'Alice'</span>);
+  <span class="kw">await</span> userEvent.<span class="fn">click</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit'</span> }));
+  <span class="fn">expect</span>(screen.<span class="fn">queryByText</span>(<span class="str">'Name is required'</span>)).<span class="op">not</span>.<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+
+    <h3>Testing a loading state</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>javascript</span></div>
+      <pre><span class="fn">it</span>(<span class="str">'should show loading then data'</span>, <span class="kw">async</span> () => {
+  mockFetch.<span class="fn">mockResolvedValue</span>({ name: <span class="str">'Alice'</span> });
+  <span class="fn">render</span>(<span class="op">&lt;</span><span class="cls">UserProfile</span> <span class="op">/&gt;</span>);
+
+  <span class="cmt">// Loading state should appear first</span>
+  <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Loading...'</span>)).<span class="fn">toBeInTheDocument</span>();
+
+  <span class="cmt">// Wait for data to appear</span>
+  <span class="fn">expect</span>(<span class="kw">await</span> screen.<span class="fn">findByText</span>(<span class="str">'Alice'</span>)).<span class="fn">toBeInTheDocument</span>();
+
+  <span class="cmt">// Loading spinner should now be gone</span>
+  <span class="fn">expect</span>(screen.<span class="fn">queryByText</span>(<span class="str">'Loading...'</span>)).<span class="op">not</span>.<span class="fn">toBeInTheDocument</span>();
+});</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 19 ════════ -->
+  <section id="whattoskip">
+    <h2><span class="sec-num">19</span> What NOT to Test <span class="new-badge">New</span></h2>
+    <p>This is one of the most important lessons. Writing unnecessary tests wastes time and makes your test suite brittle — tests that break every time you refactor even when nothing is actually wrong.</p>
+
+    <h3>Don't test these things</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>What</th><th>Why not</th></tr></thead>
+      <tbody>
+        <tr><td>Third-party libraries (React, Axios, Redux)</td><td>They have their own tests. Trust them.</td></tr>
+        <tr><td>Implementation details (internal variable names, state structure)</td><td>If you refactor the code but behavior stays the same, tests shouldn't break</td></tr>
+        <tr><td>CSS styles and visual design</td><td>Hard to test reliably. Use visual regression tools (Chromatic, Percy) instead</td></tr>
+        <tr><td>Simple prop drilling (passing a value down and rendering it)</td><td>Not enough logic to warrant a test</td></tr>
+        <tr><td>Every single line of code</td><td>100% coverage doesn't mean 100% correct — focus on meaningful behavior</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Focus your tests on these instead</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>What</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Business logic in hooks and utilities</td><td>This is the brain of your app — must be correct</td></tr>
+        <tr><td>User interactions (click, type, submit)</td><td>What actually matters to the user</td></tr>
+        <tr><td>Error states (empty, failed API, validation)</td><td>Easy to forget manually, often where bugs hide</td></tr>
+        <tr><td>Conditional rendering (show/hide logic)</td><td>Easy to break when code changes</td></tr>
+        <tr><td>API integration (with mocks)</td><td>Confirm the right data is sent and responses are handled</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="box box-g"><strong>The key question to ask yourself</strong>Before writing a test, ask: "If this breaks, will a user notice?" If yes — write the test. If no — skip it.</div>
+  </section>
+
+  <!-- ════════ 20 ════════ -->
+  <section id="organize">
+    <h2><span class="sec-num">20</span> File Organization at Scale <span class="new-badge">New</span></h2>
+
+    <h3>Recommended structure for a growing project</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>folder structure</span></div>
+      <pre>src/
+  components/
+    Button/
+      Button.jsx
+      Button.test.jsx       <span class="cmt">← component tests</span>
+  hooks/
+    useAuth.js
+    useAuth.test.js         <span class="cmt">← hook tests</span>
+  utils/
+    formatDate.js
+    formatDate.test.js      <span class="cmt">← utility function tests</span>
+  test-utils.jsx            <span class="cmt">← shared custom render helper</span>
+  setupTests.js             <span class="cmt">← global test setup</span></pre>
+    </div>
+
+    <h3>Naming conventions</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>File</th><th>Convention</th></tr></thead>
+      <tbody>
+        <tr><td>Test files</td><td>Same name as the file they test + .test.jsx</td></tr>
+        <tr><td>describe blocks</td><td>Name of the component or hook: describe('Button', ...)</td></tr>
+        <tr><td>it blocks</td><td>Sentence starting with "should": 'should show error when...'</td></tr>
+        <tr><td>Mock variables</td><td>Prefix with "mock": mockNavigate, mockFetch, mockSave</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Running specific tests from the terminal</h3>
+    <div class="code-wrap">
+      <div class="code-bar"><div class="code-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div><span>terminal</span></div>
+      <pre><span class="cmt"># Run all tests</span>
+npm test
+
+<span class="cmt"># Run tests in a specific file</span>
+npx vitest run Button.test
+
+<span class="cmt"># Run tests matching a name pattern</span>
+npx vitest run -t "should show error"
+
+<span class="cmt"># Run with the UI dashboard (visual interface in browser)</span>
+npx vitest --ui</pre>
+    </div>
+  </section>
+
+  <!-- ════════ 21 ════════ -->
+  <section id="tips">
+    <h2><span class="sec-num">21</span> Tips and Common Mistakes</h2>
+
+    <div class="box box-g"><strong>One test = one behavior</strong>Each <code>it()</code> should test exactly one thing. If you're checking three things, split into three tests. Small focused tests are easy to read and easy to debug.</div>
+
+    <div class="box box-g"><strong>Test behavior, not implementation</strong>Don't test internal details like variable names. Test what the user sees. If you refactor but behavior stays the same, tests should still pass.</div>
+
+    <div class="box box-g"><strong>Write test names as sentences</strong>"should show error when email is invalid" — when this fails, you instantly know what broke without reading the test body.</div>
+
+    <div class="box box-g"><strong>Prefer getByRole over getByTestId</strong>getByRole reflects real accessibility — it's how screen readers navigate too. getByTestId is a last resort and tells you nothing about real behavior.</div>
+
+    <div class="box box-r"><strong>Never commit .only or .skip without a reason</strong>.only will cause your CI pipeline to only run that one test. .skip silently skips tests that might be catching real bugs.</div>
+
+    <div class="box box-r"><strong>Don't forget act() around state changes in hook tests</strong>Without it, React will warn you and your assertions may check stale values.</div>
+
+    <div class="box box-r"><strong>Using getBy when the element might be absent</strong>getBy throws if the element isn't found. When checking absence, use queryBy — it returns null without crashing.</div>
+
+    <div class="box box-o"><strong>Not clearing mocks between tests</strong>Call vi.clearAllMocks() in beforeEach. Without it, call counts from Test 1 bleed into Test 2.</div>
+
+    <div class="box box-o"><strong>Making tests too specific about text</strong>If your test checks exact wording like "Please enter a valid email address", it breaks every time a designer tweaks the copy. Check for key words instead, or test the presence of an error element by role.</div>
+
+    <div class="box box-b"><strong>Start small, build up</strong>Don't try to test everything at once. Write one test, make it pass, write another. Momentum beats perfection.</div>
+  </section>
+
+</main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
